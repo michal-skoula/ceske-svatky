@@ -6,7 +6,7 @@ import { escapeText, foldLine } from "../src/ics.mjs";
 
 const LAYOUTS = ["dohromady", "zvlast"];
 const ALARMS = { rano: 8, odpoledne: 14, vecer: 18 };
-const FILES = LAYOUTS.flatMap((layout) => [`${layout}.ics`, ...Object.keys(ALARMS).map((alarm) => `${layout}-upozorneni:${alarm}.ics`)]);
+const FILES = LAYOUTS.flatMap((layout) => [`jmeniny-${layout}.ics`, ...Object.keys(ALARMS).map((alarm) => `jmeniny-${layout}-upozorneni:${alarm}.ics`)]);
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), "utf8");
 
@@ -37,21 +37,21 @@ test("builds all 8 calendars and each parses", async () => {
 });
 
 test("together: one event on 6 Jan with all three kings, none on 1 Jan or 25 Dec", async () => {
-	const calendar = await parse("dohromady.ics");
+	const calendar = await parse("jmeniny-dohromady.ics");
 	assert.deepEqual(summariesOn(calendar, "2027-01-06"), ["Svátek: Kašpar, Melichar a Baltazar"]);
 	assert.deepEqual(summariesOn(calendar, "2027-01-01"), []);
 	assert.deepEqual(summariesOn(calendar, "2027-12-25"), []);
 });
 
 test("separate: three events on 6 Jan with distinct UIDs", async () => {
-	const calendar = await parse("zvlast.ics");
+	const calendar = await parse("jmeniny-zvlast.ics");
 	assert.deepEqual(summariesOn(calendar, "2027-01-06").sort(), ["Svátek: Baltazar", "Svátek: Kašpar", "Svátek: Melichar"]);
 	const uids = calendar.getAllSubcomponents("vevent").map((e) => e.getFirstPropertyValue("uid"));
 	assert.equal(new Set(uids).size, uids.length);
 });
 
 test("Horymír appears on 29 Feb only in leap years", async () => {
-	const calendar = await parse("dohromady.ics");
+	const calendar = await parse("jmeniny-dohromady.ics");
 	assert.deepEqual(summariesOn(calendar, "2028-02-29"), ["Svátek: Horymír"]);
 	assert.deepEqual(summariesOn(calendar, "2027-02-28"), ["Svátek: Lumír"]);
 	assert.deepEqual(summariesOn(calendar, "2027-03-01"), ["Svátek: Bedřich a Bedřiška"]);
@@ -59,9 +59,9 @@ test("Horymír appears on 29 Feb only in leap years", async () => {
 
 test("alarm files carry one VALARM at the right hour, plain files carry none", async () => {
 	for (const layout of LAYOUTS) {
-		assert.ok(!(await read(`${layout}.ics`)).includes("BEGIN:VALARM"));
+		assert.ok(!(await read(`jmeniny-${layout}.ics`)).includes("BEGIN:VALARM"));
 		for (const [alarm, hour] of Object.entries(ALARMS)) {
-			const calendar = await parse(`${layout}-upozorneni:${alarm}.ics`);
+			const calendar = await parse(`jmeniny-${layout}-upozorneni:${alarm}.ics`);
 			for (const event of calendar.getAllSubcomponents("vevent")) {
 				const alarms = event.getAllSubcomponents("valarm");
 				assert.equal(alarms.length, 1);
@@ -80,7 +80,7 @@ test("no physical line exceeds 75 octets, CRLF endings, diacritics survive unfol
 			assert.ok(Buffer.byteLength(line) <= 75, `${file}: ${line}`);
 		}
 	}
-	const calendar = await parse("dohromady.ics");
+	const calendar = await parse("jmeniny-dohromady.ics");
 	assert.deepEqual(summariesOn(calendar, "2027-01-08"), ["Svátek: Čestmír"]);
 });
 
@@ -96,5 +96,5 @@ test("foldLine never splits a multi-byte character", () => {
 
 test("escapeText escapes commas, semicolons, backslashes and newlines", () => {
 	assert.equal(escapeText("a, b; c\\d\ne"), "a\\, b\\; c\\\\d\\ne");
-	return read("dohromady.ics").then((text) => assert.ok(text.includes("SUMMARY:Svátek: Kašpar\\, Melichar a Baltazar")));
+	return read("jmeniny-dohromady.ics").then((text) => assert.ok(text.includes("SUMMARY:Svátek: Kašpar\\, Melichar a Baltazar")));
 });

@@ -12,14 +12,14 @@ All feeds live at `https://michal-skoula.github.io/ceske-svatky/<file>`.
 
 | File | Names | Alarm |
 |---|---|---|
-| [`dohromady.ics`](https://michal-skoula.github.io/ceske-svatky/dohromady.ics) | one event per day | none |
-| [`dohromady-upozorneni:rano.ics`](https://michal-skoula.github.io/ceske-svatky/dohromady-upozorneni:rano.ics) | one event per day | 8:00 |
-| [`dohromady-upozorneni:odpoledne.ics`](https://michal-skoula.github.io/ceske-svatky/dohromady-upozorneni:odpoledne.ics) | one event per day | 14:00 |
-| [`dohromady-upozorneni:vecer.ics`](https://michal-skoula.github.io/ceske-svatky/dohromady-upozorneni:vecer.ics) | one event per day | 18:00 |
-| [`zvlast.ics`](https://michal-skoula.github.io/ceske-svatky/zvlast.ics) | one event per name | none |
-| [`zvlast-upozorneni:rano.ics`](https://michal-skoula.github.io/ceske-svatky/zvlast-upozorneni:rano.ics) | one event per name | 8:00 |
-| [`zvlast-upozorneni:odpoledne.ics`](https://michal-skoula.github.io/ceske-svatky/zvlast-upozorneni:odpoledne.ics) | one event per name | 14:00 |
-| [`zvlast-upozorneni:vecer.ics`](https://michal-skoula.github.io/ceske-svatky/zvlast-upozorneni:vecer.ics) | one event per name | 18:00 |
+| [`jmeniny-dohromady.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-dohromady.ics) | one event per day | none |
+| [`jmeniny-dohromady-upozorneni:rano.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-dohromady-upozorneni:rano.ics) | one event per day | 8:00 |
+| [`jmeniny-dohromady-upozorneni:odpoledne.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-dohromady-upozorneni:odpoledne.ics) | one event per day | 14:00 |
+| [`jmeniny-dohromady-upozorneni:vecer.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-dohromady-upozorneni:vecer.ics) | one event per day | 18:00 |
+| [`jmeniny-zvlast.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-zvlast.ics) | one event per name | none |
+| [`jmeniny-zvlast-upozorneni:rano.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-zvlast-upozorneni:rano.ics) | one event per name | 8:00 |
+| [`jmeniny-zvlast-upozorneni:odpoledne.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-zvlast-upozorneni:odpoledne.ics) | one event per name | 14:00 |
+| [`jmeniny-zvlast-upozorneni:vecer.ics`](https://michal-skoula.github.io/ceske-svatky/jmeniny-zvlast-upozorneni:vecer.ics) | one event per name | 18:00 |
 
 On 6 January, `dohromady` shows one event, "Svátek: Kašpar, Melichar a Baltazar". `zvlast` shows three: "Svátek: Kašpar", "Svátek: Melichar" and "Svátek: Baltazar".
 

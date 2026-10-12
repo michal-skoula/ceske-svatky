@@ -16,9 +16,9 @@ for (const entry of await readdir(OUT)) {
 }
 
 for (const [layout, separate] of Object.entries(LAYOUTS)) {
-	await writeFile(`${OUT}/${layout}.ics`, vcalendar(days, { separate, alarmHour: null }));
+	await writeFile(`${OUT}/jmeniny-${layout}.ics`, vcalendar(days, { separate, alarmHour: null }));
 	for (const [alarm, alarmHour] of Object.entries(ALARMS)) {
-		await writeFile(`${OUT}/${layout}-upozorneni:${alarm}.ics`, vcalendar(days, { separate, alarmHour }));
+		await writeFile(`${OUT}/jmeniny-${layout}-upozorneni:${alarm}.ics`, vcalendar(days, { separate, alarmHour }));
 	}
 }
 
