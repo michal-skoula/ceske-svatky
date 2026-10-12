@@ -6,7 +6,7 @@ import { escapeText, foldLine } from "../src/ics.mjs";
 
 const LAYOUTS = ["dohromady", "zvlast"];
 const ALARMS = { rano: 8, odpoledne: 14, vecer: 18 };
-const FILES = LAYOUTS.flatMap((layout) => [`${layout}.ics`, ...Object.keys(ALARMS).map((alarm) => `${layout}-upozorneni-${alarm}.ics`)]);
+const FILES = LAYOUTS.flatMap((layout) => [`${layout}.ics`, ...Object.keys(ALARMS).map((alarm) => `${layout}-upozorneni:${alarm}.ics`)]);
 
 const read = (file) => readFile(new URL(`../dist/${file}`, import.meta.url), "utf8");
 
@@ -61,7 +61,7 @@ test("alarm files carry one VALARM at the right hour, plain files carry none", a
 	for (const layout of LAYOUTS) {
 		assert.ok(!(await read(`${layout}.ics`)).includes("BEGIN:VALARM"));
 		for (const [alarm, hour] of Object.entries(ALARMS)) {
-			const calendar = await parse(`${layout}-upozorneni-${alarm}.ics`);
+			const calendar = await parse(`${layout}-upozorneni:${alarm}.ics`);
 			for (const event of calendar.getAllSubcomponents("vevent")) {
 				const alarms = event.getAllSubcomponents("valarm");
 				assert.equal(alarms.length, 1);

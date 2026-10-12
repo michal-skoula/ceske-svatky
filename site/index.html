@@ -84,8 +84,9 @@ const base = new URL(".", location.href);
 function update() {
 	const layout = form.layout.value;
 	const alarm = form.alarm.value;
-	const file = alarm ? `${layout}-upozorneni-${alarm}.ics` : `${layout}.ics`;
-	const https = new URL(file, base).href;
+	const file = alarm ? `${layout}-upozorneni:${alarm}.ics` : `${layout}.ics`;
+	// "./" keeps the part before the colon from being read as a URL scheme.
+	const https = new URL(`./${file}`, base).href;
 	const webcal = https.replace(/^https?:/, "webcal:");
 	document.getElementById("url").value = https;
 	document.getElementById("webcal").href = webcal;
