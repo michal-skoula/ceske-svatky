@@ -59,7 +59,11 @@ npm run build
 npm test
 ```
 
-`npm run build` writes the calendars and `index.html` to `dist/`. `npm test` builds first, then parses every file with [ical.js](https://github.com/kewisch/ical.js) and checks recurrence, alarms, line folding and the leap day.
+```bash
+npm run dev
+```
+
+`npm run build` writes the calendars and `index.html` to `dist/`. `npm run dev` builds, serves `dist/` at http://localhost:1234 and opens it in your browser. `npm test` builds first, then parses every file with [ical.js](https://github.com/kewisch/ical.js) and checks recurrence, alarms, line folding and the leap day.
 
 The page lives in [`site/index.html`](site/index.html). It's plain HTML with a few lines of JS that turn the form choices into a file name.
 
