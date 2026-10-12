@@ -95,6 +95,6 @@ test("foldLine never splits a multi-byte character", () => {
 });
 
 test("escapeText escapes commas, semicolons, backslashes and newlines", () => {
-	assert.equal(escapeText("a, b; c\\d\ne"), "a\\, b\; c\\\\d\\ne");
+	assert.equal(escapeText("a, b; c\\d\ne"), "a\\, b\\; c\\\\d\\ne");
 	return read("dohromady.ics").then((text) => assert.ok(text.includes("SUMMARY:Svátek: Kašpar\\, Melichar a Baltazar")));
 });
