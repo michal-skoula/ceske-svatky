@@ -1,4 +1,4 @@
-import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { vcalendar } from "./src/ics.mjs";
 import { nameDays } from "./src/names.mjs";
 
@@ -9,8 +9,11 @@ const ALARMS = { rano: 8, odpoledne: 14, vecer: 18 };
 
 const days = nameDays();
 
-await rm(OUT, { recursive: true, force: true });
-await mkdir(OUT);
+// Empty dist/ instead of deleting it, so the dev server's file watcher keeps working.
+await mkdir(OUT, { recursive: true });
+for (const entry of await readdir(OUT)) {
+	await rm(`${OUT}/${entry}`, { recursive: true, force: true });
+}
 
 for (const [layout, separate] of Object.entries(LAYOUTS)) {
 	await writeFile(`${OUT}/${layout}.ics`, vcalendar(days, { separate, alarmHour: null }));
