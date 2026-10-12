@@ -7,7 +7,11 @@ const UID_DOMAIN = "ceske-svatky";
 const pad = (n) => String(n).padStart(2, "0");
 
 export function escapeText(text) {
-	return text.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+	return text
+		.replace(/\\/g, "\\\\")
+		.replace(/;/g, "\\;")
+		.replace(/,/g, "\\,")
+		.replace(/\r?\n/g, "\\n");
 }
 
 /** Fold a content line at 75 octets without splitting a UTF-8 sequence (RFC 5545 §3.1). */
