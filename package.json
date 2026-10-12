@@ -1,0 +1,21 @@
+{
+  "name": "ceske-svatky",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kalendář českých jmenin (svátků) jako ICS feed na GitHub Pages.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs && node --test"
+  },
+  "dependencies": {
+    "namedays-cs": "2.0.1"
+  },
+  "devDependencies": {
+    "ical.js": "2.2.1"
+  }
+}

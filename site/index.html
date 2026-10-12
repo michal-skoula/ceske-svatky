@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>České svátky do kalendáře</title>
+<meta name="description" content="Odebírejte kalendář českých jmenin. Každý den uvidíte, kdo má svátek.">
+<style>
+:root {
+	--bg: #f7f6f3; --surface: #fff; --fg: #1f2329; --muted: #646b75; --line: #dcdad4;
+	--accent: #b4232f; --accent-fg: #fff;
+	color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+	:root { --bg: #15171a; --surface: #1e2125; --fg: #e8e9eb; --muted: #9ba1aa; --line: #33373d; --accent: #ef6b74; --accent-fg: #15171a; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 48px 16px 64px; }
+main { max-width: 620px; margin: 0 auto; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 12px; }
+h2 { font-size: 1rem; margin: 0 0 10px; }
+p { margin: 0 0 12px; }
+.muted { color: var(--muted); font-size: .92rem; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 16px 18px; margin: 20px 0 0; }
+legend { font-weight: 600; padding: 0 6px; }
+.step { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 4px; }
+label { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; cursor: pointer; }
+label small { display: block; color: var(--muted); }
+input[type=radio] { accent-color: var(--accent); }
+.result { border: 2px solid var(--accent); }
+.buttons { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 14px; }
+.button { display: inline-block; padding: 9px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; border: 1px solid var(--accent); color: var(--accent); background: transparent; font: inherit; font-weight: 600; cursor: pointer; }
+.button.primary { background: var(--accent); color: var(--accent-fg); }
+.button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.url { display: block; width: 100%; font: .85rem ui-monospace, Menlo, monospace; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.note { margin-top: 14px; }
+footer { margin-top: 40px; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+	<h1>České svátky do kalendáře</h1>
+	<p>Kalendář, který každý den ukáže, kdo má svátek. Přidáte ho jednou jako odběr a funguje napořád, protože se každý rok opakuje sám.</p>
+	<p class="muted">Funguje v Apple Kalendáři, Google Kalendáři, Outlooku i dalších aplikacích, které umí odebírat kalendáře ve formátu ICS.</p>
+
+	<form id="form">
+		<fieldset>
+			<legend><span class="step">1.</span> Jak zobrazit jména</legend>
+			<label><input type="radio" name="layout" value="dohromady" checked> <span>Dohromady<small>Jedna událost za den, např. „Svátek: Kašpar, Melichar a Baltazar“</small></span></label>
+			<label><input type="radio" name="layout" value="zvlast"> <span>Každé jméno zvlášť<small>Samostatná událost pro každé jméno</small></span></label>
+		</fieldset>
+
+		<fieldset>
+			<legend><span class="step">2.</span> Upozornění</legend>
+			<label><input type="radio" name="alarm" value="" checked> <span>Bez upozornění</span></label>
+			<label><input type="radio" name="alarm" value="rano"> <span>Ráno v 8:00</span></label>
+			<label><input type="radio" name="alarm" value="odpoledne"> <span>Odpoledne ve 14:00</span></label>
+			<label><input type="radio" name="alarm" value="vecer"> <span>Večer v 18:00</span></label>
+		</fieldset>
+
+		<fieldset class="result">
+			<legend><span class="step">3.</span> Přidat do kalendáře</legend>
+			<div class="buttons">
+				<a class="button primary" id="webcal" href="#">Přidat do kalendáře</a>
+				<a class="button" id="google" href="#" target="_blank" rel="noopener">Přidat do Google Kalendáře</a>
+			</div>
+			<p class="muted">Nebo zkopírujte adresu a vložte ji do aplikace jako odběr kalendáře:</p>
+			<input class="url" id="url" type="text" readonly aria-label="Adresa kalendáře">
+			<div class="buttons"><button class="button" id="copy" type="button">Kopírovat adresu</button></div>
+			<p class="muted note" id="google-note" hidden>Google Kalendář upozornění z odebíraných kalendářů ignoruje. Pokud ho používáte, nastavte si upozornění ručně v nastavení kalendáře „Svátky“.</p>
+		</fieldset>
+	</form>
+
+	<footer class="muted">
+		<p>Data o jmeninách pochází z knihovny <a href="https://github.com/OzzyCzech/namedays-cs">namedays-cs</a> (Roman Ožana, MIT) podle české Wikipedie. Zdrojový kód je na <a href="https://github.com/michal-skoula/ceske-svatky">GitHubu</a>.</p>
+	</footer>
+</main>
+
+<script>
+const form = document.getElementById("form");
+const base = new URL(".", location.href);
+
+function update() {
+	const layout = form.layout.value;
+	const alarm = form.alarm.value;
+	const file = alarm ? `${layout}-upozorneni-${alarm}.ics` : `${layout}.ics`;
+	const https = new URL(file, base).href;
+	const webcal = https.replace(/^https?:/, "webcal:");
+	document.getElementById("url").value = https;
+	document.getElementById("webcal").href = webcal;
+	document.getElementById("google").href = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`;
+	document.getElementById("google-note").hidden = !alarm;
+	document.getElementById("copy").textContent = "Kopírovat adresu";
+}
+
+form.addEventListener("change", update);
+document.getElementById("copy").addEventListener("click", async (event) => {
+	const input = document.getElementById("url");
+	try {
+		await navigator.clipboard.writeText(input.value);
+		event.target.textContent = "Zkopírováno";
+	} catch {
+		input.select();
+	}
+});
+update();
+</script>
+</body>
+</html>
